@@ -1,0 +1,1 @@
+ps2exe mouse_wheel_scroll_reverse.ps1 scroll_reverse.exe -Icon scroll.ico
