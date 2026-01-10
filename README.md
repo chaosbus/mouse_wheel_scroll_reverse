@@ -1,43 +1,72 @@
 # Mouse Wheel Scroll Reverse
 
-## 1. Description
+[中文](./README_CN.md)
 
-Control the mouse scroll direction by modifying the registry via PowerShell. You can convert the ps1 script into an executable EXE file with PS2EXE.
+## 1. Overview
 
-通过powershell修改注册表方式实现控制鼠标滚轮方向。可通过PS2EXE将ps1脚本转为可执行文件EXE。
+This tool reverses the mouse wheel scroll direction by modifying the Windows Registry via PowerShell. The `.ps1` script can be converted into a standalone `.exe` executable using **PS2EXE**.
 
-![](./docs/screenshot1.png)
+![img1](./docs/screenshot1.png "Screenshot")
 
-## 2. Dev
+## 2. Instructions
 
-### 2.1 安装 `PS2EXE`
-以**管理员身份**打开 PowerShell，执行以下命令安装模块：
+### 2.1 Running the Tool
+
+There are two ways to run this tool: via a batch file (`.bat`) or as a compiled executable (`.exe`).
+
+- **Batch method**
+  Simply run [run.bat](src/run.bat) to launch the script directly.
+
+- **Executable method**
+  Use the [build.bat](src/build.bat) batch script to convert the `.ps1` file into an `.exe` executable, then double-click to run it.
+
+### 2.2 Mouse Database Maintenance
+
+This project uses [vendors.json](src/vendors.json) to maintain mappings of mouse vendor IDs (`VID`) and product IDs (`PID`).
+
+You can extend this database yourself using resources like:
+
+- <http://www.linux-usb.org/usb.ids>
+- <https://devicehunt.com/>
+
+## 3. Appendix
+
+### 3.1 Installing `PS2EXE`
+
+Open **PowerShell as Administrator** and run the following command to install the module:
+
 ```powershell
-# 安装 PS2EXE 模块
+# Install the PS2EXE module
 Install-Module -Name PS2EXE -Force
-# 确认安装
+# Verify installation
 Get-Module -ListAvailable PS2EXE
 ```
-> 若提示“无法安装，因为仓库不信任”，先执行：`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`，选择 `Y` 确认。
 
-### 2.2 打包 PowerShell 脚本为 EXE
-在 PowerShell 中切换到脚本所在目录，执行打包命令：
+> If you see an error like *"Installation not allowed because the repository is untrusted,"* first run:
+> `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` and press `Y` to confirm.
+
+### 3.2 Packaging a PowerShell Script into EXE
+
+In PowerShell, navigate to your script’s directory and run:
+
 ```powershell
-# 基本语法：ps2exe 源脚本路径 输出EXE路径
+# Basic syntax: ps2exe <source_script.ps1> <output.exe>
 ps2exe .\your_script.ps1 .\output.exe
 ```
 
-### 2.3. 高级参数（可选）
-你可以自定义 EXE 的图标、窗口样式、权限等：
+### 3.3 Advanced Options (Optional)
+
+You can customize the EXE’s icon, window style, required privileges, etc.:
 
 ```powershell
 ps2exe .\your_script.ps1 .\output.exe `
--Icon .\custom.ico `          # 自定义程序图标
--WindowStyle Hidden `         # 隐藏控制台窗口（后台运行）
--AdminRequired `              # 要求以管理员身份运行
--NoConsole `                  # 完全无控制台窗口（GUI程序适用）
+-Icon .\custom.ico `          # Custom application icon
+-WindowStyle Hidden `         # Hide console window (run in background)
+-AdminRequired `              # Require administrator privileges
+-NoConsole `                  # No console window at all (ideal for GUI apps)
 ```
 
-### 2.4 注意事项
-- 生成的 EXE **依赖目标电脑的 .NET Framework**（一般 Windows 系统默认自带）。
-- 若脚本涉及文件读写、注册表操作，EXE 运行时的权限与双击者的权限一致。
+### 3.4 Notes
+
+- The generated EXE **requires .NET Framework**, which is typically pre-installed on Windows.
+- If the script accesses the file system or registry, the EXE will run with the same permissions as the user who launched it.
